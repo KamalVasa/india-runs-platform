@@ -6,9 +6,11 @@ services:
     plan: free
     region: frankfurt
     buildCommand: "if [ -d 'backend' ]; then cd backend; fi && pip install -r requirements.txt && python scripts/load_data.py && python scripts/generate_embeddings.py && python scripts/build_faiss.py"
-    startCommand: "if [ -d 'backend' ]; then cd backend; fi && uvicorn main:app --host 0.0.0.0 --port $PORT"
+    startCommand: "if [ -d 'backend' ]; then cd backend; fi && uvicorn main:app --host 0.0.0.0 --port 8000"
     envVars:
       - key: GEMINI_API_KEY
         sync: false
       - key: PYTHON_VERSION
         value: "3.10.0"
+      - key: PORT
+        value: "8000"
