@@ -1,5 +1,3 @@
-from sentence_transformers import SentenceTransformer
-
 class JobEngine:
     def __init__(self):
         self.model = None
@@ -7,6 +5,7 @@ class JobEngine:
     def get_model(self):
         if self.model is None:
             print("Loading Job Engine embedding model...")
+            from sentence_transformers import SentenceTransformer
             self.model = SentenceTransformer('all-MiniLM-L6-v2')
         return self.model
 

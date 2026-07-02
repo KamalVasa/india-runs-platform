@@ -1,4 +1,3 @@
-import faiss
 import numpy as np
 import os
 import json
@@ -9,12 +8,10 @@ class FAISSService:
         self.id_path = id_path
         self.index = None
         self.candidate_ids = []
-        
-        # We load lazily or on init if files exist
-        self.load_index()
                 
     def load_index(self):
         if os.path.exists(self.index_path) and os.path.exists(self.id_path):
+            import faiss
             self.index = faiss.read_index(self.index_path)
             with open(self.id_path, "r") as f:
                 self.candidate_ids = json.load(f)
