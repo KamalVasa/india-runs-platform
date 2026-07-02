@@ -12,7 +12,7 @@ export default function CandidateDetail() {
   const [loadingQuestions, setLoadingQuestions] = useState(false);
 
   useEffect(() => {
-    api.get(`/candidates/${id}`).then(res => setCand(res.data)).catch(console.error);
+    api.get(`candidates/${id}`).then(res => setCand(res.data)).catch(console.error);
   }, [id]);
 
   const generateReport = async () => {

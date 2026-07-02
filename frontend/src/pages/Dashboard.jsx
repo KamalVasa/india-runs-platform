@@ -7,7 +7,7 @@ export default function Dashboard() {
   const [candidates, setCandidates] = useState([]);
   
   useEffect(() => {
-    api.get('/candidates').then(res => setCandidates(res.data)).catch(console.error);
+    api.get('candidates').then(res => setCandidates(res.data)).catch(console.error);
   }, []);
 
   return (

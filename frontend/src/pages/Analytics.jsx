@@ -9,7 +9,7 @@ export default function Analytics() {
   const [data, setData] = useState(null);
   
   useEffect(() => {
-    api.get('/analytics').then(res => setData(res.data)).catch(console.error);
+    api.get('analytics').then(res => setData(res.data)).catch(console.error);
   }, []);
 
   if (!data) return <div className="p-8 text-slate-400">Loading Analytics Dashboard... (Ensure backend is running)</div>;
