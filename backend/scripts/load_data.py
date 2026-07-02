@@ -86,6 +86,8 @@ def load_data(filepath: str):
 if __name__ == "__main__":
     # Check for dataset paths, prioritize raw then compressed
     possible_paths = [
+        os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data", "sample_candidates.jsonl"),
+        "/Users/kamal/India_runs/dataset/India_runs_data_and_ai_challenge/candidates.jsonl",
         "/Users/kamal/India_runs/[PUB] India_runs_data_and_ai_challenge/India_runs_data_and_ai_challenge/candidates.jsonl",
         "/Users/kamal/India_runs/[PUB] India_runs_data_and_ai_challenge/India_runs_data_and_ai_challenge/candidates.jsonl.gz"
     ]
