@@ -15,14 +15,33 @@ class CopilotQuery(BaseModel):
 @router.post("/explain/{candidate_id}")
 def explain_candidate(candidate_id: str, db: Session = Depends(get_db)):
     cand = db.query(CandidateModel).filter(CandidateModel.candidate_id == candidate_id).first()
-    if not cand:
+    
+    cand_dict = None
+    if cand:
+        cand_dict = {
+            "title": cand.current_title,
+            "experience": cand.years_of_experience,
+            "history": cand.career_history
+        }
+    else:
+        # Fallback to expanded JSON
+        import os, json
+        json_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "data", "top_100_candidates.json")
+        if os.path.exists(json_path):
+            with open(json_path, 'r') as f:
+                top_100 = json.load(f)
+                for res in top_100:
+                    if res["candidate"]["candidate_id"] == candidate_id:
+                        cand_dict = {
+                            "title": res["candidate"].get("current_title", ""),
+                            "experience": res["candidate"].get("years_of_experience", 0),
+                            "history": res["candidate"].get("career_history", [])
+                        }
+                        break
+                        
+    if not cand_dict:
         raise HTTPException(status_code=404, detail="Candidate not found")
-        
-    cand_dict = {
-        "title": cand.current_title,
-        "experience": cand.years_of_experience,
-        "history": cand.career_history
-    }
+
     
     report = generate_match_report(cand_dict, DEFAULT_JD)
     return report
@@ -42,11 +61,30 @@ def copilot_query(payload: CopilotQuery):
 @router.post("/interview/{candidate_id}")
 def generate_interview_questions(candidate_id: str, db: Session = Depends(get_db)):
     cand = db.query(CandidateModel).filter(CandidateModel.candidate_id == candidate_id).first()
-    if not cand:
+    
+    cand_title = ""
+    cand_exp = 0
+    if cand:
+        cand_title = cand.current_title
+        cand_exp = cand.years_of_experience
+    else:
+        # Fallback to JSON
+        import os, json
+        json_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "data", "top_100_candidates.json")
+        if os.path.exists(json_path):
+            with open(json_path, 'r') as f:
+                top_100 = json.load(f)
+                for res in top_100:
+                    if res["candidate"]["candidate_id"] == candidate_id:
+                        cand_title = res["candidate"].get("current_title", "")
+                        cand_exp = res["candidate"].get("years_of_experience", 0)
+                        break
+                        
+    if not cand_title:
         raise HTTPException(status_code=404, detail="Candidate not found")
         
     model = get_gemini_model()
-    prompt = f"Based on this candidate ({cand.current_title}, {cand.years_of_experience} yrs exp) and the JD: {DEFAULT_JD}, generate 3 highly targeted interview questions to probe their technical weaknesses."
+    prompt = f"Based on this candidate ({cand_title}, {cand_exp} yrs exp) and the JD: {DEFAULT_JD}, generate 3 highly targeted interview questions to probe their technical weaknesses."
     
     try:
         response = model.generate_content(prompt)

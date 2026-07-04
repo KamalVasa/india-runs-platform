@@ -17,7 +17,8 @@ export default function CopilotChat() {
       const res = await api.post('/ai/copilot', { query: userMsg });
       setMessages(prev => [...prev, {role: 'ai', text: res.data.reply}]);
     } catch (err) {
-      setMessages(prev => [...prev, {role: 'ai', text: 'Error: Gemini API is unavailable or API Key is missing. AI features are disabled.'}]);
+      const errMsg = err.response?.data?.detail || err.message || 'Unknown network error';
+      setMessages(prev => [...prev, {role: 'ai', text: `Error: ${errMsg}`}]);
     }
   };
 
