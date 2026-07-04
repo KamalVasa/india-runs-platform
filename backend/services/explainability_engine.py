@@ -9,7 +9,8 @@ try:
     if settings.GEMINI_API_KEY and settings.GEMINI_API_KEY != "YOUR_GEMINI_API_KEY_HERE":
         genai.configure(api_key=settings.GEMINI_API_KEY)
         ai_configured = True
-except Exception:
+except Exception as e:
+    print(f"Error configuring Gemini: {e}")
     pass
 
 def generate_offline_reasoning(candidate, score) -> str:
@@ -30,7 +31,7 @@ def get_gemini_model():
             status_code=503, 
             detail="Gemini API Key is missing. Please set GEMINI_API_KEY in .env. AI features are currently disabled."
         )
-    return genai.GenerativeModel('gemini-2.5-flash')
+    return genai.GenerativeModel('gemini-1.5-flash')
 
 def generate_match_report(candidate_json: dict, jd_text: str) -> dict:
     model = get_gemini_model()
