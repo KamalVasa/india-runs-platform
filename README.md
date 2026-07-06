@@ -2,6 +2,9 @@
 
 ![Platform Header Placeholder](/docs/header_placeholder.png)
 
+**🏆 LIVE HACKATHON DEMO:** [https://bright-dolphin-df77cd.netlify.app](https://bright-dolphin-df77cd.netlify.app)
+*(Note to Judges: This is the final deployed URL for the platform)*
+
 An AI-powered, offline-capable candidate ranking and explainability platform built for the **IndiaRuns Data & AI Challenge**. 
 
 This platform leverages dense vector embeddings (FAISS), behavioral trap heuristics, and rule-based rationales to seamlessly sift through 100,000+ candidate profiles in under 5 minutes on CPU. It features a completely offline hackathon ranking script (`rank.py`) alongside a production-ready Web Sandbox powered by FastAPI, React, and Gemini 3.1 Pro.
